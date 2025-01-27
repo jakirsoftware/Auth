@@ -1,0 +1,63 @@
+//https://chatgpt.com/c/67970056-1494-8003-8f91-a01eb94e24c7
+//303296642590-6bkoemi2e71vbvvesosbubogp1r9ujit.apps.googleusercontent.com
+//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
+
+const CLIENT_ID = '303296642590-6bkoemi2e71vbvvesosbubogp1r9ujit.apps.googleusercontent.com';
+const CLIENT_SECRET = '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';
+const CALLBACK_URL = 'https://auditequation.web.app';
+
+const SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
+
+function doGet(e) {
+  if (e.parameter.code) {
+    // OAuth callback handling
+    const token = getOAuthToken(e.parameter.code);
+    const userInfo = getUserInfo(token.access_token);
+    return HtmlService.createHtmlOutput(`<h1>Welcome, ${userInfo.email}</h1>`);
+  } else {
+    // Initial OAuth redirect
+    const authUrl = getOAuthUrl();
+    return HtmlService.createHtmlOutput(`<a href="${authUrl}">Login with Google</a>`);
+  }
+}
+
+function getOAuthUrl() {
+  return (
+    'https://accounts.google.com/o/oauth2/auth?' +
+    `client_id=${CLIENT_ID}&` +
+    `redirect_uri=${CALLBACK_URL}&` +
+    'response_type=code&' +
+    `scope=${encodeURIComponent(SCOPE)}`
+  );
+}
+
+function getOAuthToken(code) {
+  const url = 'https://oauth2.googleapis.com/token';
+  const payload = {
+    code: code,
+    client_id: CLIENT_ID,
+    client_secret: CLIENT_SECRET,
+    redirect_uri: CALLBACK_URL,
+    grant_type: 'authorization_code',
+  };
+
+  const options = {
+    method: 'post',
+    payload: payload,
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+  return JSON.parse(response.getContentText());
+}
+
+function getUserInfo(accessToken) {
+  const url = 'https://www.googleapis.com/oauth2/v2/userinfo';
+  const options = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+  return JSON.parse(response.getContentText());
+}
