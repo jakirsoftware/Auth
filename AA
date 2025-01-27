@@ -4,7 +4,7 @@
 
 const CLIENT_ID = '303296642590-6bkoemi2e71vbvvesosbubogp1r9ujit.apps.googleusercontent.com';
 const CLIENT_SECRET = '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';
-const CALLBACK_URL = 'https://auditequation.web.app';
+const CALLBACK_URL = 'https://script.google.com/macros/s/AKfycbx3VLqnSGQBk2ed_k7RmIdo_wfuy3p0WK667f1YqfOQ0cs6_YB2L1ioA9ZqnPr8cG6e1A/exec/callback';
 
 const SCOPE = 'https://www.googleapis.com/auth/userinfo.email';
 
